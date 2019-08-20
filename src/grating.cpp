@@ -180,11 +180,18 @@ int main(int narg, char** args)
         glVertexAttrib1f(phase, cur_phase);
 
 		// 1rst attribute buffer : vertices
+#ifdef USE_OGL_33
 		glEnableVertexAttribArray(vertex);
+#else
+        glEnableVertexAttribArray(0);
+#endif
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 		glVertexAttribPointer(
-			//0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+#ifdef USE_OGL_33
+			0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+#else
             vertex,
+#endif
 			3,                  // size
 			GL_FLOAT,           // type
 			GL_FALSE,           // normalized?
