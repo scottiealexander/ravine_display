@@ -63,6 +63,11 @@ bool parse_ini(
     std::ifstream is;
     is.open(filename, std::ifstream::in);
 
+    if (!is.good())
+    {
+        return false;
+    }
+
     std::string buf;
 
     while (std::getline(is, buf, '\n'))
@@ -123,15 +128,15 @@ bool parse_ini(
             }
         }
     }
-    
+
     is.close();
-    
+
     return success;
 }
 
 RunSpec::RunSpec(const char* filename) : g_param(default_grating()), ptr(0)
 {
-    bool success = parse_ini(filename, g_param, varying, values);
+    valid = parse_ini(filename, g_param, varying, values);
 }
 
 float RunSpec::get(const std::string& key)

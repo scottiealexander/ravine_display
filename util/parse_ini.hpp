@@ -13,7 +13,9 @@ public:
     int length();
     const std::string& get_varying() { return varying; };
     void show();
+    bool isvalid() { return valid; }
 private:
+    bool valid;
     std::map<std::string, float> g_param;
     std::string varying;
     std::vector<float> values;
