@@ -19,6 +19,12 @@
 #include <util/program.hpp>
 #include <util/run.hpp>
 
+#ifdef USE_OGL_33
+    #pragma message "Using OGL 3.3"
+#else
+    #pragma message "Using OGL 1.4"
+#endif
+
 void usage()
 {
     printf("Usage: grating_ex <options> <ini_filepath>\n");

@@ -17,6 +17,8 @@ void run(GLProgram& program, RunSpec& rs, GLFWwindow* window)
     float frames_per_second = static_cast<float>(get_refresh_rate());
     float refresh_interval = 1.0 / frames_per_second;
 
+    glfwSwapInterval(1);
+
     /* ---------------------------------------------------------------------- */
     // Get a handle for our uniform program variables
     GLint center = program.get_uniform("center");
@@ -26,7 +28,9 @@ void run(GLProgram& program, RunSpec& rs, GLFWwindow* window)
     GLint ori = program.get_uniform("ori");
 
     GLint phase = program.get_attribute("phase");
+#ifndef USE_OGL_33
     GLint vertex = program.get_attribute("vertexPosition");
+#endif
     /* ---------------------------------------------------------------------- */
 
     static const GLfloat g_vertex_buffer_data[] = {
@@ -53,8 +57,8 @@ void run(GLProgram& program, RunSpec& rs, GLFWwindow* window)
     uint32_t intertrial_sleep = static_cast<uint32_t>(floor(g_blank * MICROSEC_PER_SECOND));
 
     // glfw report an integer frame rate, so for a ~60Hz monitor it reports
-    // 59, so add 2 (?) frames to get the fewest number of frame of at least g_duration
-    int32_t frames_per_trial = static_cast<uint32_t>(ceil(g_duration * frames_per_second)) + 2;
+    // 59, so add 1 to get the fewest number of frame of at least g_duration
+    int32_t frames_per_trial = static_cast<uint32_t>(ceil(g_duration * (frames_per_second + 1.0f)));
 
     // blank the screen
     glClear(GL_COLOR_BUFFER_BIT);
@@ -82,6 +86,8 @@ void run(GLProgram& program, RunSpec& rs, GLFWwindow* window)
         // inter-trial blank period
         usleep(intertrial_sleep);
 
+        tstart = t1 = tnow = glfwGetTime();
+
         for (int kframe = 0; kframe < frames_per_trial; ++kframe)
         {
             // Clear the screen
@@ -100,9 +106,9 @@ void run(GLProgram& program, RunSpec& rs, GLFWwindow* window)
 
             // 1st attribute buffer : vertices
 #ifdef USE_OGL_33
-            glEnableVertexAttribArray(vertex);
-#else
             glEnableVertexAttribArray(0);
+#else
+            glEnableVertexAttribArray(vertex);
 #endif
             glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
             glVertexAttribPointer(
@@ -121,11 +127,15 @@ void run(GLProgram& program, RunSpec& rs, GLFWwindow* window)
             // draw window size rect
             glDrawArrays(GL_TRIANGLE_FAN, 0, 4); // 4 indices starting at 0 -> 1 rectangle
 
+#ifdef USE_OGL_33
+            glDisableVertexAttribArray(0);
+#else
             glDisableVertexAttribArray(vertex);
+#endif
 
             if (kframe == 0)
             {
-                tstart = t1 = tnow = glfwGetTime();
+                // tstart = t1 = tnow = glfwGetTime();
                 /* NOTE TODO: SEND STIM ON TRIGGER*/
             }
 

@@ -46,7 +46,7 @@ class GLArrayBuffer : public GLObject
         }
     }
 
-    inline void bind() { glBindBuffer(GL_ARRAY_BUFFER,get_id()); }
+    inline void bind() { glBindBuffer(GL_ARRAY_BUFFER, get_id()); }
     inline size_t length() const { return _length; }
 
     template<typename T>
