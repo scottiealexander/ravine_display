@@ -121,6 +121,9 @@ add_executable(grating_ex
     util/program.cpp
     util/program.hpp
 
+    util/parse_ini.cpp
+    util/parse_ini.hpp
+
     # common/controls.cpp
     # common/controls.hpp
 
