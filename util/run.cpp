@@ -158,9 +158,10 @@ void run(GLProgram& program, RunSpec& rs, GLFWwindow* window)
         // while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
         //        glfwWindowShouldClose(window) == 0 );
 
-        /* NOTE TODO: SEND STIM OFF TRIGGER*/
         glClear(GL_COLOR_BUFFER_BIT);
         glfwSwapBuffers(window);
+
+        /* NOTE TODO: SEND STIM OFF TRIGGER*/
         printf("Trial duration: %f\n", glfwGetTime() - tstart);
         printf("Mean ifi: %f\n", ifi_total / count);
    }
