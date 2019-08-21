@@ -13,12 +13,11 @@
 // #include <glm/glm.hpp>
 // using namespace glm;
 
+#include <util/utility_classes.hpp>
 #include <util/initialize.hpp>
-#include <util/program.hpp>
 #include <util/parse_ini.hpp>
+#include <util/program.hpp>
 #include <util/run.hpp>
-
-#include "./utility_classes.hpp"
 
 void usage()
 {
@@ -89,7 +88,7 @@ int main(int narg, char** args)
     GLProgram program("./grating/vertex-1.4.glsl", "./grating/fragment-1.4.glsl");
 #endif
 
-    if (program.getID() < 1)
+    if (program.get_id() < 1)
     {
         // Close OpenGL window and terminate GLFW
         printf("[ERROR]: failed to init GLSL programs\n");

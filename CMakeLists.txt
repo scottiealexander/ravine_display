@@ -127,13 +127,12 @@ add_executable(grating_ex
     util/run.cpp
     util/run.hpp
 
-    # common/controls.cpp
-    # common/controls.hpp
+    util/utility_classes.cpp
+    util/utility_classes.hpp
 
     src/grating/fragment.glsl
     src/grating/vertex.glsl
 
-    # src/viewport.hpp
 )
 
 target_link_libraries(grating_ex

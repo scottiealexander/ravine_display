@@ -19,14 +19,14 @@ void run(GLProgram& program, RunSpec& rs, GLFWwindow* window)
 
     /* ---------------------------------------------------------------------- */
     // Get a handle for our uniform program variables
-    GLint center = program.getUniform("center");
-    GLint radius = program.getUniform("radius");
-    GLint freq = program.getUniform("freq");
-    GLint contrast = program.getUniform("contrast");
-    GLint ori = program.getUniform("ori");
+    GLint center = program.get_uniform("center");
+    GLint radius = program.get_uniform("radius");
+    GLint freq = program.get_uniform("freq");
+    GLint contrast = program.get_uniform("contrast");
+    GLint ori = program.get_uniform("ori");
 
-    GLint phase = program.getAttribute("phase");
-    GLint vertex = program.getAttribute("vertexPosition");
+    GLint phase = program.get_attribute("phase");
+    GLint vertex = program.get_attribute("vertexPosition");
     /* ---------------------------------------------------------------------- */
 
     static const GLfloat g_vertex_buffer_data[] = {

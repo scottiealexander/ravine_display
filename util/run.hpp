@@ -5,7 +5,7 @@
 #include <GLFW/glfw3.h>
 // #include <glm/glm.hpp>
 
-#include "../src/utility_classes.hpp"
+#include "utility_classes.hpp"
 #include "parse_ini.hpp"
 
 /* 2 * PI */
