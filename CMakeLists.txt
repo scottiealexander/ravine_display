@@ -143,6 +143,36 @@ target_link_libraries(grating_ex
 set_target_properties(grating_ex PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 # create_target_launcher(ogl WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/plot_ex/")
 
+# checkerboard script
+add_executable(checkerboard_ex
+    src/checkerboard.cpp
+
+    util/initialize.cpp
+    util/initialize.hpp
+
+    util/program.cpp
+    util/program.hpp
+
+    util/msequence.cpp
+    util/msequence.hpp
+
+    # util/run.cpp
+    # util/run.hpp
+
+    util/utility_classes.cpp
+    util/utility_classes.hpp
+
+    # src/checkerboard/fragment.glsl
+    # src/checkerboard/vertex.glsl
+)
+
+target_link_libraries(checkerboard_ex
+	${ALL_LIBS}
+)
+
+# Xcode and Visual working directories
+set_target_properties(checkerboard_ex PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/")
+
 SOURCE_GROUP(common REGULAR_EXPRESSION ".*/common/.*" )
 SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*shader$" )
 
@@ -162,6 +192,11 @@ add_custom_command(
 add_custom_command(
    TARGET grating_ex POST_BUILD
    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/grating_ex${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/src/"
+)
+
+add_custom_command(
+   TARGET checkerboard_ex POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/checkerboard_ex${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/src/"
 )
 
 elseif (${CMAKE_GENERATOR} MATCHES "Xcode" )

@@ -133,14 +133,15 @@ void run(GLProgram& program, RunSpec& rs, GLFWwindow* window)
             glDisableVertexAttribArray(vertex);
 #endif
 
-            if (kframe == 0)
-            {
-                // tstart = t1 = tnow = glfwGetTime();
-                /* NOTE TODO: SEND STIM ON TRIGGER*/
-            }
-
             // Swap buffers
             glfwSwapBuffers(window);
+
+            // if (kframe == 0)
+            // {
+            //     // tstart = t1 = tnow = glfwGetTime();
+            //     /* NOTE TODO: SEND STIM ON TRIGGER*/
+            // }
+
             glfwPollEvents();
 
             tlast = tnow;
