@@ -127,8 +127,8 @@ add_executable(grating_ex
     util/run.cpp
     util/run.hpp
 
-    util/tcp_client.cpp
-    util/tcp_client.hpp
+    util/event_client.cpp
+    util/event_client.hpp
 
     util/utility_classes.cpp
     util/utility_classes.hpp
@@ -159,8 +159,8 @@ add_executable(checkerboard_ex
     util/msequence.cpp
     util/msequence.hpp
 
-    util/tcp_client.cpp
-    util/tcp_client.hpp
+    util/event_client.cpp
+    util/event_client.hpp
 
     util/utility_classes.cpp
     util/utility_classes.hpp
