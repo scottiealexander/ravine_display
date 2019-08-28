@@ -14,4 +14,4 @@
 /distrib
 /external
 
-test_*
+# test_*
