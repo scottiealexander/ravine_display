@@ -5,21 +5,9 @@
 #include <vector>
 #include <map>
 
-class RunSpec
-{
-public:
-    RunSpec(const char* filename);
-    float get(const std::string& key);
-    int length();
-    const std::string& get_varying() { return varying; };
-    void show();
-    bool isvalid() { return valid; }
-private:
-    bool valid;
-    std::map<std::string, float> g_param;
-    std::string varying;
-    std::vector<float> values;
-    int ptr;
-};
+using PMap = std::map<std::string, float>;
+
+void parse_array(const std::string&, std::vector<float>&);
+bool parse_ini(const char*, PMap&, std::string&, std::vector<float>&);
 
 #endif

@@ -124,6 +124,9 @@ add_executable(grating_ex
     util/parse_ini.cpp
     util/parse_ini.hpp
 
+    util/run_spec.cpp
+    util/run_spec.hpp
+
     util/run.cpp
     util/run.hpp
 
@@ -158,6 +161,9 @@ add_executable(checkerboard_ex
 
     util/msequence.cpp
     util/msequence.hpp
+
+    util/parse_ini.cpp
+    util/parse_ini.hpp
 
     util/event_client.cpp
     util/event_client.hpp

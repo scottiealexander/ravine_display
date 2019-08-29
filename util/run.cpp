@@ -3,6 +3,7 @@
 #include <unistd.h>
 
 #include "initialize.hpp"
+#include "run_spec.hpp"
 #include "run.hpp"
 
 int get_refresh_rate()

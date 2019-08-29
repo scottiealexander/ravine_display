@@ -19,7 +19,7 @@
 #include <util/program.hpp>
 #include <util/msequence.hpp>
 
-#define ELEMENT_SIZE 32
+#include <util/parse_ini.hpp>
 
 #ifdef USE_OGL_33
     #pragma message "Using OGL 3.3"
@@ -29,19 +29,42 @@
 
 void usage(const char* prg)
 {
-    printf("Usage: %s <options>\n", prg);
+    printf("Usage: %s <options> <ini_filepath>\n", prg);
     printf("    -f: fullscreen\n");
-    printf("    -r [n=1]: repeat sequence <n> times\n");
-    printf("    -t [n=1]: frames-per-term (update display every <n> frames)\n");
     printf("    -d: dump text of first frame\n");
     printf("    -h: show help\n");
+}
+
+bool get_run_params(const char* filepath, PMap& p)
+{
+    p["repeats"] = 1.0f;
+    p["frames-per-term"] = 4.0f;
+    p["element-size"] = 32.0f;
+
+    std::vector<float> v;
+    std::string a;
+
+    return parse_ini(filepath, p, a, v);
+}
+
+void dump_frame(MSequence& seq, int kframe = 0)
+{
+    int foo = kframe;
+    for (int k = 0; k < 256; ++k)
+    {
+        if (k % 16 == 0)
+        {
+            printf("\n");
+        }
+        printf("%d ", seq.get_bit(foo));
+        foo += 128;
+    }
+    printf("\n");
 }
 
 int main(int narg, char** args)
 {
     bool fullscreen = false;
-    int repeats = 1;
-    int frames_per_term = 1;
     bool dump = false;
     if (narg > 1)
     {
@@ -51,14 +74,6 @@ int main(int narg, char** args)
             if (arg == "-f")
             {
                 fullscreen = true;
-            }
-            else if (arg == "-r" && (k+1) < narg)
-            {
-                repeats = atoi(args[k+1]);
-            }
-            else if (arg == "-t" && (k+1) < narg)
-            {
-                frames_per_term = atoi(args[k+1]);
             }
             else if (arg == "-d")
             {
@@ -72,30 +87,23 @@ int main(int narg, char** args)
         }
     }
 
+    PMap params;
+    if (!get_run_params(args[narg-1], params))
+    {
+        printf("[ERROR]: failed to read ini file: %s\n", args[narg-1]);
+        return -4;
+    }
+
     MSequence seq("./m-sequence.bin");
     if (!seq.isvalid())
     {
         printf("[ERROR]: failed to read file: %s\n", "./m-sequence.bin");
         return -3;
     }
-    else
-    {
-        printf("[INFO]: running m-sequence for %ld frames\n", (int64_t)(seq.length() * repeats));
-    }
 
     if (dump)
     {
-        int foo = 0;
-        for (int k = 0; k < 256; ++k)
-        {
-            if (k % 16 == 0)
-            {
-                printf("\n");
-            }
-            printf("%d ", seq.get_bit(foo));
-            foo += 128;
-        }
-        printf("\n");
+        dump_frame(seq, 0);
     }
 
     int ret;
@@ -137,13 +145,18 @@ int main(int narg, char** args)
         return -1;
     }
 
+    // unpack / pre-calculate all the parameters we need to draw
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
     printf("SCREEN SIZE: %d x %d\n", width, height);
     static const float center[2] = {(float)width / 2.0f, (float)height / 2.0f};
 
-    float hw = (ELEMENT_SIZE / (float)width) * 16.0f;
-    float hh = (ELEMENT_SIZE / (float)height) * 16.0f;
+    int element_size = static_cast<int>(params["element-size"]);
+    int frames_per_term = static_cast<int>(params["frames-per-term"]);
+    int repeats = static_cast<int>(params["repeats"]);
+
+    float hw = (element_size / (float)width) * 16.0f;
+    float hh = (element_size / (float)height) * 16.0f;
 
     int square_height = (int)floor(hh * (float)height);
     int square_width = (int)floor(hw * (float)width);
@@ -153,12 +166,10 @@ int main(int narg, char** args)
         (height - square_height) / 2
     };
 
-    printf("SQUARE HEIGHT = %d\n", square_height);
-    printf("HH = %f\n", hh);
-    printf("SQUARE WIDTH = %d\n", square_width);
-    printf("HW = %f\n", hw);
-    printf("ORIGIN: [%d, %d]\n", origin[0], origin[1]);
+    if (hw > 1.0f) { hw = 1.0f; }
+    if (hh > 1.0f) { hh = 1.0f; }
 
+    // the rectangular frame
     static const GLfloat g_vertex_buffer_data[] = {
 		-hw, -hh, 0.0f,
 		 hw, -hh, 0.0f,
@@ -182,6 +193,7 @@ int main(int narg, char** args)
 
     int32_t* pattern_array;
 
+    printf("[INFO]: running m-sequence for %ld frames\n", (int64_t)(seq.length() * repeats));
     // // 16x16 identity matrix
     // int32_t pattern_array[8] = {
     //     131073,
@@ -204,7 +216,7 @@ int main(int narg, char** args)
         glClear(GL_COLOR_BUFFER_BIT);
         program.use();
 
-        glUniform1i(px_side_length, ELEMENT_SIZE);
+        glUniform1i(px_side_length, element_size);
         glUniform1i(px_height, square_height);
         glUniform1iv(pattern, 8, pattern_array);
         glUniform2iv(px_origin, 1, origin);

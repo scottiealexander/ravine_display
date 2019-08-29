@@ -6,7 +6,7 @@
 // #include <glm/glm.hpp>
 
 #include "utility_classes.hpp"
-#include "parse_ini.hpp"
+#include "run_spec.hpp"
 
 /* 2 * PI */
 #define TWOPI 6.2831855f
