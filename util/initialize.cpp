@@ -50,7 +50,7 @@ GLFWwindow* init(bool fullscreen, int& ret)
         glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
         glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-        width = mode->width - 20;
+        width = mode->width;
         height = mode->height;
     }
     else

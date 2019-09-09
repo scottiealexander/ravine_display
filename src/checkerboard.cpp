@@ -158,8 +158,12 @@ int main(int narg, char** args)
     float hw = (element_size / (float)width) * 16.0f;
     float hh = (element_size / (float)height) * 16.0f;
 
-    int square_height = (int)floor(hh * (float)height);
+    printf("SQUARE SIZE: %f x %f ", hw, hh);
+
     int square_width = (int)floor(hw * (float)width);
+    int square_height = (int)floor(hh * (float)height);
+
+    printf("(%d x %d)\n", square_width, square_height);
 
     int origin[2] = {
         (width - square_width) / 2,
