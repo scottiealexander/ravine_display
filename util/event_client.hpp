@@ -15,6 +15,7 @@ double get_time();
 class EventClient
 {
 public:
+    virtual ~EventClient() {}
     virtual bool sync_connect() = 0;
     virtual void sync_send(uint8_t) const = 0;
     virtual uint8_t sync_read() const = 0;

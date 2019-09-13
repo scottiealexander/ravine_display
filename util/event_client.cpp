@@ -1,4 +1,5 @@
 #include <strings.h>
+#include <cstdio>
 #include <netdb.h>
 #include <chrono>
 
@@ -27,6 +28,7 @@ TCPClient::TCPClient(const char* ip, int port)
 /* -------------------------------------------------------------------------- */
 TCPClient::~TCPClient()
 {
+    printf("[INFO]: closing tcp connection\n");
     close(_fd);
 }
 /* -------------------------------------------------------------------------- */
