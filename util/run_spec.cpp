@@ -22,7 +22,11 @@ PMap default_grating()
 
 RunSpec::RunSpec(const char* filename) : g_param(default_grating()), ptr(0)
 {
-    valid = parse_ini(filename, g_param, varying, values);
+    valid = parse_ini(filename, g_param, varying, values, triggers);
+    if (values.size() != triggers.size())
+    {
+        valid = false;
+    }
 }
 
 float RunSpec::get(const std::string& key)
