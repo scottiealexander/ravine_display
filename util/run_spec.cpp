@@ -16,13 +16,14 @@ PMap default_grating()
     gs["duration"] = 2.0f;
     gs["blank_duration"] = 1.0f;
     gs["repeats"] = 1.0f;
+    gs["host-port"] = -1.0f;
 
     return gs;
 }
 
 RunSpec::RunSpec(const char* filename) : g_param(default_grating()), ptr(0)
 {
-    valid = parse_ini(filename, g_param, varying, values, triggers);
+    valid = parse_ini(filename, g_param, varying, values, host_ip, triggers);
     if (values.size() != triggers.size())
     {
         valid = false;

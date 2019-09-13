@@ -9,7 +9,8 @@
 /* -------------------------------------------------------------------------- */
 using PMap = std::map<std::string, float>;
 /* -------------------------------------------------------------------------- */
-bool parse_ini(const char*, PMap&, std::string&, std::vector<float>&, std::vector<uint8_t>&);
+bool parse_ini(const char*, PMap&,
+    std::string&, std::vector<float>&, std::string&, std::vector<uint8_t>&);
 /* -------------------------------------------------------------------------- */
 // void parse_array(const std::string&, std::vector<float>&);
 template <typename T>
