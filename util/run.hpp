@@ -6,6 +6,7 @@
 // #include <glm/glm.hpp>
 
 #include "utility_classes.hpp"
+#include "event_client.hpp"
 #include "run_spec.hpp"
 
 /* 2 * PI */
@@ -16,6 +17,6 @@
 
 #define MICROSEC_PER_SECOND 1000000.0f
 
-void run(GLProgram& program, RunSpec& rs, GLFWwindow* window);
+void run(GLProgram& program, RunSpec& rs, EventClient* trigger, GLFWwindow* window);
 
 #endif

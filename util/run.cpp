@@ -3,7 +3,6 @@
 #include <unistd.h>
 
 #include "initialize.hpp"
-#include "run_spec.hpp"
 #include "run.hpp"
 
 int get_refresh_rate()
@@ -13,7 +12,7 @@ int get_refresh_rate()
     return mode->refreshRate;
 }
 
-void run(GLProgram& program, RunSpec& rs, GLFWwindow* window)
+void run(GLProgram& program, RunSpec& rs, EventClient* trigger, GLFWwindow* window)
 {
     float frames_per_second = static_cast<float>(get_refresh_rate());
     float refresh_interval = 1.0 / frames_per_second;
@@ -67,6 +66,8 @@ void run(GLProgram& program, RunSpec& rs, GLFWwindow* window)
 
     for (int ktrial = 0; ktrial < rs.length(); ++ktrial)
     {
+        uint8_t trig_code = rs.next_trigger();
+
         // grating parameters for this trial: varying value is automatically
         // updated by the RunSpec object
         float g_radius = rs.get("radius");
@@ -137,11 +138,11 @@ void run(GLProgram& program, RunSpec& rs, GLFWwindow* window)
             // Swap buffers
             glfwSwapBuffers(window);
 
-            // if (kframe == 0)
-            // {
-            //     // tstart = t1 = tnow = glfwGetTime();
-            //     /* NOTE TODO: SEND STIM ON TRIGGER*/
-            // }
+            if (kframe == 0)
+            {
+                // tstart = t1 = tnow = glfwGetTime();
+                trigger->sync_send(trig_code);
+            }
 
             glfwPollEvents();
 
