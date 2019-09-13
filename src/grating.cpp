@@ -14,6 +14,7 @@
 // using namespace glm;
 
 #include <util/utility_classes.hpp>
+#include <util/event_client.hpp>
 #include <util/initialize.hpp>
 #include <util/parse_ini.hpp>
 #include <util/program.hpp>
@@ -24,6 +25,9 @@
 #else
     #pragma message "Using OGL 1.4"
 #endif
+
+#define HOST_IP "127.0.0.1"
+#define HOST_PORT 65001
 
 void usage()
 {
@@ -62,6 +66,15 @@ int main(int narg, char** args)
     }
 
     rs.show();
+
+    TCPClient client(HOST_IP, HOST_PORT);
+    // LogClient client;
+
+    if (!client.sync_connect())
+    {
+        printf("[ERROR]: failed to connect to host - %s:%d\n", HOST_IP, HOST_PORT);
+        return -2;
+    }
 
     int ret;
     GLFWwindow* window = init(fullscreen, ret);
@@ -103,7 +116,10 @@ int main(int narg, char** args)
     }
 
     // RUN TRIALS
-    run(program, rs, window);
+    run(program, rs, &client, window);
+
+    // send close signal to client
+    client.sync_send(0xff);
 
     printf("[INFO]: left main render loop @ %f\n", glfwGetTime());
 
