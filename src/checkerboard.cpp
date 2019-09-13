@@ -15,6 +15,7 @@
 // using namespace glm;
 
 #include <util/utility_classes.hpp>
+#include <util/event_client.hpp>
 #include <util/initialize.hpp>
 #include <util/program.hpp>
 #include <util/msequence.hpp>
@@ -40,11 +41,13 @@ bool get_run_params(const char* filepath, PMap& p)
     p["repeats"] = 1.0f;
     p["frames-per-term"] = 4.0f;
     p["element-size"] = 32.0f;
+    p["frame-trigger"] = 1.0f;
 
     std::vector<float> v;
+    std::vector<uint8_t> t;
     std::string a;
 
-    return parse_ini(filepath, p, a, v);
+    return parse_ini(filepath, p, a, v, t);
 }
 
 void dump_frame(MSequence& seq, int kframe = 0)
@@ -101,6 +104,15 @@ int main(int narg, char** args)
         return -3;
     }
 
+    // TCPClient trigger(HOST_IP, HOST_PORT);
+    LogClient trigger;
+
+    if (!trigger.sync_connect())
+    {
+        printf("[ERROR]: failed to connect to host\n");
+        return -2;
+    }
+
     if (dump)
     {
         dump_frame(seq, 0);
@@ -151,9 +163,9 @@ int main(int narg, char** args)
     printf("SCREEN SIZE: %d x %d\n", width, height);
     static const float center[2] = {(float)width / 2.0f, (float)height / 2.0f};
 
-    int element_size = static_cast<int>(params["element-size"]);
-    int frames_per_term = static_cast<int>(params["frames-per-term"]);
-    int repeats = static_cast<int>(params["repeats"]);
+    int element_size = (int)params["element-size"];
+    int frames_per_term = (int)params["frames-per-term"];
+    int repeats = (int)params["repeats"];
 
     float hw = (element_size / (float)width) * 16.0f;
     float hh = (element_size / (float)height) * 16.0f;
@@ -210,6 +222,8 @@ int main(int narg, char** args)
     //     -2147467264
     // };
 
+    const uint8_t frame_trigger = (uint8_t)params["frame-trigger"];
+
     for (size_t kframe = 0; kframe < (seq.length() * repeats); ++kframe)
     {
         if (kframe % frames_per_term == 0)
@@ -254,11 +268,11 @@ int main(int narg, char** args)
 #endif
         glfwSwapBuffers(window);
 
-        // if (kframe % frames_per_term == 0)
-        // {
-        //     // NOTE TODO FIXME
-        //     // send frame trigger
-        // }
+        if (kframe % frames_per_term == 0)
+        {
+            // NOTE TODO FIXME
+            trigger.sync_send(frame_trigger);
+        }
 
         glfwPollEvents();
 
