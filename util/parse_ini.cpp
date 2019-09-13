@@ -3,41 +3,43 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <cinttypes>
 
 #include "parse_ini.hpp"
 
-void parse_array(const std::string& str, std::vector<float>& values)
-{
-    int k = 0;
-    while (k < str.length() && (std::isspace(str[k]) || str[k] == '[')) { ++k; }
-
-    int ks = k;
-    int ke = ks + 1;
-    k = ke;
-    while (k < str.length())
-    {
-        if (str[k] == ',' || str[k] == ']')
-        {
-            values.push_back(std::atof(str.substr(ks, ke - ks).c_str()));
-            ++k;
-            while (k < str.length() && std::isspace(str[k])) { ++k; }
-            ks = k;
-            ke = k + 1;
-        }
-        else if (!std::isspace(str[k]))
-        {
-            ++ke;
-        }
-
-        ++k;
-    }
-}
+// void parse_array(const std::string& str, std::vector<float>& values)
+// {
+//     int k = 0;
+//     while (k < str.length() && (std::isspace(str[k]) || str[k] == '[')) { ++k; }
+//
+//     int ks = k;
+//     int ke = ks + 1;
+//     k = ke;
+//     while (k < str.length())
+//     {
+//         if (str[k] == ',' || str[k] == ']')
+//         {
+//             values.push_back(std::atof(str.substr(ks, ke - ks).c_str()));
+//             ++k;
+//             while (k < str.length() && std::isspace(str[k])) { ++k; }
+//             ks = k;
+//             ke = k + 1;
+//         }
+//         else if (!std::isspace(str[k]))
+//         {
+//             ++ke;
+//         }
+//
+//         ++k;
+//     }
+// }
 
 bool parse_ini(
     const char* filename,
     PMap& gs,
     std::string& varying,
-    std::vector<float>& values
+    std::vector<float>& values,
+    std::vector<uint8_t>& triggers
 )
 {
     bool success = true;
@@ -104,7 +106,23 @@ bool parse_ini(
                 else if (key == "values")
                 {
                     // parse array of numbers
-                    parse_array(val, values);
+                    parse_array<float>(val, values);
+                }
+                else if (key == "triggers")
+                {
+                    // annoyingly, uint8_t are chars, so when we ask parse_array
+                    // to use uint8_t elements, is uses char's and we get the
+                    // ascii code (e.g. 49 for 1), instead of the number...
+                    std::vector<int> tmp;
+
+                    parse_array<int>(val, tmp);
+
+                    // finally, cast to uint8_t as we copy...
+                    triggers.resize(tmp.size());
+                    for (int k = 0; k < tmp.size(); ++k)
+                    {
+                        triggers[k] = (uint8_t)tmp[k];
+                    }
                 }
             }
         }
