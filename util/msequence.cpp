@@ -12,8 +12,6 @@ MSequence::MSequence(const char* filepath) : _state(false)
     {
         fread(&_length, sizeof(int64_t), 1, fp);
 
-        printf("_length = %ld\n", _length);
-
         _data = new int32_t[_length];
 
         fread(_data, sizeof(int32_t), _length, fp);
@@ -27,7 +25,6 @@ MSequence::~MSequence()
 {
     if (_data != nullptr)
     {
-        printf("Deleting _data\n");
         delete[] _data;
     }
     _length = 0;
