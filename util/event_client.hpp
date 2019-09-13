@@ -26,7 +26,7 @@ public:
     inline bool sync_connect() override { return true; }
     inline void sync_send(uint8_t msg) const override
     {
-        printf("[SEND]: %d @ %.6f\n", msg, get_time());
+        printf("[SEND]: %d @ %.6f\n", (int)msg, get_time());
     }
     inline uint8_t sync_read() const override { return 'x'; }
 };

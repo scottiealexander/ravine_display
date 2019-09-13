@@ -18,7 +18,6 @@ TCPClient::TCPClient(const char* ip, int port)
     _fd =  socket(AF_INET, SOCK_STREAM, 0);
     hostent* server = gethostbyname(ip);
 
-
     bzero((char*) &_addr, sizeof(_addr));
     _addr.sin_family = AF_INET;
 
