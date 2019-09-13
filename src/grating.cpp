@@ -26,9 +26,6 @@
     #pragma message "Using OGL 1.4"
 #endif
 
-#define HOST_IP "127.0.0.1"
-#define HOST_PORT 65001
-
 void usage()
 {
     printf("Usage: grating_ex <options> <ini_filepath>\n");
@@ -67,10 +64,21 @@ int main(int narg, char** args)
 
     rs.show();
 
-    TCPClient client(HOST_IP, HOST_PORT);
-    // LogClient client;
+    int host_port = (int)rs.get("host-port");
 
-    if (!client.sync_connect())
+    printf("Host port: %d | host ip: %s\n", host_port, rs.get_host_ip());
+
+    EventClient* trigger;
+    if (host_port > 0 && host_port < 65535)
+    {
+        trigger = new TCPClient(rs.get_host_ip(), host_port);
+    }
+    else
+    {
+        trigger = new LogClient();
+    }
+
+    if (!trigger->sync_connect())
     {
         printf("[ERROR]: failed to connect to host - %s:%d\n", HOST_IP, HOST_PORT);
         return -2;
@@ -116,10 +124,10 @@ int main(int narg, char** args)
     }
 
     // RUN TRIALS
-    run(program, rs, &client, window);
+    run(program, rs, trigger, window);
 
-    // send close signal to client
-    client.sync_send(0xff);
+    // send close signal to trigger
+    trigger->sync_send(0xff);
 
     printf("[INFO]: left main render loop @ %f\n", glfwGetTime());
 
@@ -135,6 +143,8 @@ int main(int narg, char** args)
 	// Close OpenGL window and terminate GLFW
     printf("[INFO]: terminated GLFW @ %f\n", glfwGetTime());
     glfwTerminate();
+
+    delete trigger;
 
 	return 0;
 }

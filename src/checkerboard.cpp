@@ -36,18 +36,19 @@ void usage(const char* prg)
     printf("    -h: show help\n");
 }
 
-bool get_run_params(const char* filepath, PMap& p)
+bool get_run_params(const char* filepath, PMap& p, std::string& ip)
 {
     p["repeats"] = 1.0f;
     p["frames-per-term"] = 4.0f;
     p["element-size"] = 32.0f;
     p["frame-trigger"] = 1.0f;
+    p["host-port"] = -1.0f;
 
-    std::vector<float> v;
-    std::vector<uint8_t> t;
-    std::string a;
+    std::vector<float> values;
+    std::vector<uint8_t> trig;
+    std::string varying;
 
-    return parse_ini(filepath, p, a, v, t);
+    return parse_ini(filepath, p, varying, values, ip, trig);
 }
 
 void dump_frame(MSequence& seq, int kframe = 0)
@@ -90,8 +91,9 @@ int main(int narg, char** args)
         }
     }
 
+    std::string host_ip;
     PMap params;
-    if (!get_run_params(args[narg-1], params))
+    if (!get_run_params(args[narg-1], params, host_ip))
     {
         printf("[ERROR]: failed to read ini file: %s\n", args[narg-1]);
         return -4;
@@ -104,10 +106,21 @@ int main(int narg, char** args)
         return -3;
     }
 
-    // TCPClient trigger(HOST_IP, HOST_PORT);
-    LogClient trigger;
+    int host_port = (int)params["host-port"];
 
-    if (!trigger.sync_connect())
+    printf("Host port: %d | host ip: %s\n", host_port, host_ip.c_str());
+
+    EventClient* trigger;
+    if (host_port > 0 && host_port < 65535)
+    {
+        trigger = new TCPClient(host_ip.c_str(), host_port);
+    }
+    else
+    {
+        trigger = new LogClient();
+    }
+
+    if (!trigger->sync_connect())
     {
         printf("[ERROR]: failed to connect to host\n");
         return -2;
@@ -271,7 +284,7 @@ int main(int narg, char** args)
         if (kframe % frames_per_term == 0)
         {
             // NOTE TODO FIXME
-            trigger.sync_send(frame_trigger);
+            trigger->sync_send(frame_trigger);
         }
 
         glfwPollEvents();
@@ -282,6 +295,8 @@ int main(int narg, char** args)
             break;
         }
     }
+
+    trigger->sync_send(0xff);
 
     printf("[INFO]: left main render loop @ %f\n", glfwGetTime());
 
@@ -297,6 +312,8 @@ int main(int narg, char** args)
 	// Close OpenGL window and terminate GLFW
     printf("[INFO]: terminated GLFW @ %f\n", glfwGetTime());
     glfwTerminate();
+
+    delete trigger;
 
 	return 0;
 }
