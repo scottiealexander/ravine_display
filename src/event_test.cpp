@@ -45,10 +45,10 @@ int main(int narg, const char** args)
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     printf("[INFO]: starting send loop\n");
-    for (uint8_t k = 0x00; k < 0x0a; ++k)
+    for (uint8_t k = 0x00; k < 0x04; ++k)
     {
         client.sync_send(k);
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(300));
     }
 
     printf("[INFO]: send close signal\n");
