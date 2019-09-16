@@ -4,6 +4,8 @@ project (OLG_EX)
 
 find_package(OpenGL REQUIRED)
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # if( CMAKE_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR )
 #     message( FATAL_ERROR "Please select another Build Directory ! (and give it a clever name, like bin_Visual2012_64bits/)" )

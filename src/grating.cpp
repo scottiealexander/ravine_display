@@ -80,7 +80,7 @@ int main(int narg, char** args)
 
     if (!trigger->sync_connect())
     {
-        printf("[ERROR]: failed to connect to host - %s:%d\n", HOST_IP, HOST_PORT);
+        printf("[ERROR]: failed to connect to host - %s:%d\n", rs.get_host_ip(), host_port);
         return -2;
     }
 

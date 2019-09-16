@@ -53,12 +53,14 @@ void run(GLProgram& program, RunSpec& rs, EventClient* trigger, GLFWwindow* wind
     uint32_t interframe_sleep = static_cast<uint32_t>(floor((refresh_interval * MICROSEC_PER_SECOND) - 6000.0f));
 
     float g_duration = rs.get("duration");
-    float g_blank = rs.get("blank");
+    float g_blank = rs.get("blank_duration");
     uint32_t intertrial_sleep = static_cast<uint32_t>(floor(g_blank * MICROSEC_PER_SECOND));
 
     // glfw report an integer frame rate, so for a ~60Hz monitor it reports
     // 59, so add 1 to get the fewest number of frame of at least g_duration
     int32_t frames_per_trial = static_cast<uint32_t>(ceil(g_duration * (frames_per_second + 1.0f)));
+
+    printf("[INFO]: frames_per_trial = %d | g_duration = %f | frames_per_second = %f\n", frames_per_trial, g_duration, frames_per_second);
 
     // blank the screen
     glClear(GL_COLOR_BUFFER_BIT);
