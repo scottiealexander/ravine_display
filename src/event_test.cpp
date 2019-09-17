@@ -45,11 +45,22 @@ int main(int narg, const char** args)
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     printf("[INFO]: starting send loop\n");
-    for (uint8_t k = 0x00; k < 0x04; ++k)
+    double sum = 0.0;
+    const uint8_t mx = 0x64;
+    for (uint8_t k = 0x00; k < mx; ++k)
     {
+        double t1 = get_time();
         client.sync_send(k);
-        std::this_thread::sleep_for(std::chrono::milliseconds(300));
+        uint8_t msg = client.sync_read();
+        sum += get_time() - t1;
+        if (msg != k)
+        {
+            printf("[ERROR]: got %d exected %d\n", (int)msg, (int)k);
+        }
+        // printf("[REC]: %d | %f\n", (int)msg, elap);
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
+    printf("[INFO]: average roundtrip %f ms\n", sum / (double)mx * 1000.0);
 
     printf("[INFO]: send close signal\n");
     client.sync_send(0xff);
