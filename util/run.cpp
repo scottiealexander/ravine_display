@@ -50,6 +50,8 @@ void run(GLProgram& program, RunSpec& rs, EventClient* trigger, GLFWwindow* wind
 
     static const float position[2] = {(float)width / 2.0f, (float)height / 2.0f};
 
+    printf("[INFO]: position - (%f, %f)\n", position[0], position[1]);
+
     uint32_t interframe_sleep = static_cast<uint32_t>(floor((refresh_interval * MICROSEC_PER_SECOND) - 6000.0f));
 
     float g_duration = rs.get("duration");
