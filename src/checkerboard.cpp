@@ -10,17 +10,14 @@
 // Include GLFW
 #include <GLFW/glfw3.h>
 
-// Include GLM
-// #include <glm/glm.hpp>
-// using namespace glm;
 
-#include <util/utility_classes.hpp>
-#include <util/event_client.hpp>
-#include <util/initialize.hpp>
-#include <util/program.hpp>
-#include <util/msequence.hpp>
+#include <utility_classes.hpp>
+#include <event_client.hpp>
+#include <initialize.hpp>
+#include <program.hpp>
+#include <msequence.hpp>
 
-#include <util/parse_ini.hpp>
+#include <parse_ini.hpp>
 
 #ifdef USE_OGL_33
     #pragma message "Using OGL 3.3"

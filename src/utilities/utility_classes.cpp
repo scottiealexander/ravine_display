@@ -2,9 +2,9 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
-#include "util/utility_classes.hpp"
-#include "util/program.hpp"
-#include "util/bmp.hpp"
+#include "utility_classes.hpp"
+#include "program.hpp"
+#include "bmp.hpp"
 
 /* ========================================================================== */
 void GLProgram::close()

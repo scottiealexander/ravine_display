@@ -5,7 +5,7 @@
 #include <chrono>
 #include <cinttypes>
 
-#include "event_client.hpp"
+#include "utilities/event_client.hpp"
 
 void usage(const char* name)
 {
