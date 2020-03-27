@@ -232,6 +232,10 @@ int main(int narg, char** args)
     //     -2147467264
     // };
 
+    // NOTE: was getting some odd / variable behavior without explicitly setting
+    // the viewport to the full window, this seems to fix that issue...
+    glViewport(0, 0, width, height);
+
     const uint8_t frame_trigger = (uint8_t)params["frame-trigger"];
 
     for (size_t kframe = 0; kframe < (seq.length() * repeats); ++kframe)

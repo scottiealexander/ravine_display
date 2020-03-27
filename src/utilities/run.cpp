@@ -64,6 +64,11 @@ void run(GLProgram& program, RunSpec& rs, EventClient* trigger, GLFWwindow* wind
 
     printf("[INFO]: frames_per_trial = %d | g_duration = %f | frames_per_second = %f\n", frames_per_trial, g_duration, frames_per_second);
 
+    // NOTE: this was needed in checkerboard as the default (undefined?) state
+    // was resulting in some variable behavior, so explicitly set the viewport
+    // just in case
+    glViewport(0, 0, width, height);
+
     // blank the screen
     glClear(GL_COLOR_BUFFER_BIT);
     glfwSwapBuffers(window);
